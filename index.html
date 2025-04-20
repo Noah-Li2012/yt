@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoahLi404 @noahliNotFound</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      perspective: 1000px;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .title {
+      position: absolute;
+      top: 35%;
+      width: 100%;
+      text-align: center;
+      color: #00ff00;
+      font-size: 80px;
+      font-family: 'Press Start 2P', monospace;
+      text-shadow:
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff88,
+        0 0 40px #00ff88,
+        0 0 50px #00ff00,
+        0 0 60px #00ff88,
+        0 0 70px #00ff00;
+      animation:
+        fadeIn 2s ease-in-out forwards 1s,
+        flicker 1.5s infinite alternate,
+        shake3D 0.2s infinite;
+      transform-origin: center;
+      opacity: 0;
+    }
+
+    .title span {
+      font-size: 40px;
+      color: #ffcc00;
+      text-shadow:
+        0 0 10px #9f8200,
+        0 0 20px #b29000,
+        0 0 30px #ffcc88,
+        0 0 40px #ffcc88;
+      animation: breathing 3s infinite;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes flicker {
+      0% { text-shadow: 0 0 5px #00ff00; }
+      50% { text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff88; }
+      100% { text-shadow: 0 0 5px #00ff00; }
+    }
+
+    @keyframes shake3D {
+      0% { transform: translate3d(0, 0, 0); }
+      20% { transform: translate3d(-1px, 1px, 0); }
+      40% { transform: translate3d(2px, -1px, 0); }
+      60% { transform: translate3d(-2px, 2px, 0); }
+      80% { transform: translate3d(1px, -1px, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+
+    .subscribe-btn {
+      position: fixed;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      background-color: transparent;
+      color: #ffcc00;
+      border: 2px solid #ffcc00;
+      font-size: 20px;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: color 0.3s, border-color 0.3s;
+      opacity: 0;
+      animation: fadeIn 2s ease-in-out forwards 1s;
+      z-index: 1000;
+    }
+
+    .subscribe-btn:hover {
+      color: #e6b800;
+      border-color: #e6b800;
+    }
+
+    @keyframes shakeBackground {
+      0%, 100% {
+        transform: translateX(0) translateY(0);
+      }
+      50% {
+        transform: translateX(3px) translateY(3px);
+      }
+    }
+
+    .flash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      opacity: 1;
+      animation: flash 1s ease-out forwards;
+    }
+
+    @keyframes flash {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+
+  <canvas id="lightning"></canvas>
+
+  <div class="title">
+    NoahLi404<br>
+    <span>@noahliNotFound</span>
+  </div>
+
+  <button class="subscribe-btn" onclick="window.open('https://www.youtube.com/@noahliNotFound', '_blank');">
+    My Channel
+  </button>
+
+  <script>
+    const matrixCanvas = document.getElementById("matrix");
+    const matrixCtx = matrixCanvas.getContext("2d");
+    const lightningCanvas = document.getElementById("lightning");
+    const lightningCtx = lightningCanvas.getContext("2d");
+
+    matrixCanvas.height = window.innerHeight;
+    matrixCanvas.width = window.innerWidth;
+    lightningCanvas.height = window.innerHeight;
+    lightningCanvas.width = window.innerWidth;
+
+    const letters = "01";
+    const fontSize = 14;
+    const columns = matrixCanvas.width / fontSize;
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) drops[i] = 1;
+
+    function drawMatrixRain() {
+      matrixCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+      matrixCtx.fillStyle = "#0F0";
+      matrixCtx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    function createLightning() {
+  const startX = Math.random() * lightningCanvas.width;
+  const startY = Math.random() * lightningCanvas.height / 3;
+  const endX = startX + (Math.random() - 0.5) * 400;
+  const endY = startY + Math.random() * lightningCanvas.height / 2;
+
+  lightningCtx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+  lightningCtx.lineWidth = 3;
+  lightningCtx.beginPath();
+  lightningCtx.moveTo(startX, startY);
+
+  let currentX = startX;
+  let currentY = startY;
+
+  for (let i = 0; i < 15; i++) {
+    const nextX = currentX + (Math.random() - 0.5) * 80;
+    const nextY = currentY + Math.random() * 80;
+    lightningCtx.lineTo(nextX, nextY);
+    currentX = nextX;
+    currentY = nextY;
+  }
+
+  lightningCtx.lineTo(endX, endY);
+  lightningCtx.stroke();
+
+  setTimeout(() => {
+    lightningCtx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+  }, 100);
+}
+
+
+    setInterval(drawMatrixRain, 33);
+    setInterval(createLightning, 1000);
+
+    window.onload = function() {
+      setTimeout(() => {
+        const flash = document.createElement('div');
+        flash.classList.add('flash');
+        document.body.appendChild(flash);
+      }, 900);
+
+      document.body.style.animation = "shakeBackground 1s infinite";
+    }
+  </script>
+</body>
+</html>
